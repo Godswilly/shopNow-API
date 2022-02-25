@@ -1,7 +1,7 @@
 {
   "name": "shopnow-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "An e-commerce app",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -26,7 +26,9 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
-    "mongoose": "^6.2.1"
+    "mongoose": "^6.2.1",
+    "morgan": "^1.10.0",
+    "slugify": "^1.6.5"
   },
   "engines": {
     "node": ">=10.0.0"
