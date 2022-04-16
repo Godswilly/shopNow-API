@@ -1,14 +1,14 @@
-const Product = require('../models/productModel');
+const Order = require('../models/orderModel');
 
-exports.createProduct = async(req, res) => {
+exports.createOrder = async(req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const order = await Order.create(req.body);
 
     res.status(201).json({
       status: 'success',
-      count: product.length,
+      count: order.length,
       data: {
-        product,
+        order,
       },
     });
   } catch (error) {
@@ -19,17 +19,17 @@ exports.createProduct = async(req, res) => {
   }
 };
 
-exports.getAllProducts = async(req, res) => {
+exports.getAllOrder = async(req, res) => {
   try {
-    const products = await Product.find({});
+    const order = await Order.find({});
 
     res.status(200).json({
       status: 'success',
-      count: products.length,
+      count: order.length,
       data: {
-        products,
+        order,
       },
-    });
+    })
   } catch (error) {
     res.status(404).json({
       status: 'fail',
@@ -38,14 +38,14 @@ exports.getAllProducts = async(req, res) => {
   }
 };
 
-exports.getProduct = async(req, res) => {
+exports.getOrder = async(req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const order = await Order.findById(req.params.id);
 
     res.status(200).json({
       status: 'success',
       data: {
-        product,
+        order,
       },
     });
   } catch (error) {
@@ -56,19 +56,21 @@ exports.getProduct = async(req, res) => {
   }
 };
 
-exports.updateProduct = async(req, res) => {
+
+exports.updateOrder = async(req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true,
+      runValidators: true
     });
 
     res.status(200).json({
       status: 'success',
+      count: order.length,
       data: {
-        product,
+        order,
       },
-    });
+    })
   } catch (error) {
     res.status(404).json({
       status: 'fail',
@@ -77,9 +79,9 @@ exports.updateProduct = async(req, res) => {
   }
 };
 
-exports.deleteProduct = async(req, res) => {
+exports.deleteOrder = async(req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id);
+    await Order.findByIdAndDelete(req.params.id);
 
     res.status(204).json({
       status: 'success',

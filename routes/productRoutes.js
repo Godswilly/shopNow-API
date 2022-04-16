@@ -5,12 +5,12 @@ const router = express.Router();
 
 router
 .route('/')
-.get(productController.getAllProducts)
+// .get(productController.getAllProducts)
 .post(productController.createProduct);
 
 router
 .route('/:id')
-.get(productController.getProduct)
+// .get(productController.getProduct)
 .patch(productController.updateProduct)
 .delete(productController.deleteProduct);
 
