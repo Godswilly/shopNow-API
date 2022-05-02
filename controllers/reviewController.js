@@ -1,14 +1,13 @@
-const Product = require('../models/productModel');
+const Review = require('../models/reviewModel');
 
-exports.createProduct = async (req, res, next) => {
+exports.createReview = async (req, res, next) => {
 	try {
-		const product = await Product.create(req.body);
+		const review = await create(req.body);
 
 		res.status(201).json({
 			status: 'success',
-			count: product.length,
 			data: {
-				product,
+				review,
 			},
 		});
 	} catch (error) {
@@ -19,15 +18,15 @@ exports.createProduct = async (req, res, next) => {
 	}
 };
 
-exports.getAllProducts = async (req, res, next) => {
+exports.getAllReviews = async (req, res, next) => {
 	try {
-		const products = await Product.find({});
+		const reviews = await Review.find({});
 
 		res.status(200).json({
 			status: 'success',
-			count: products.length,
+			count: reviews.length,
 			data: {
-				products,
+				reviews,
 			},
 		});
 	} catch (error) {
@@ -38,14 +37,14 @@ exports.getAllProducts = async (req, res, next) => {
 	}
 };
 
-exports.getProduct = async (req, res, next) => {
+exports.getReview = async (req, res, next) => {
 	try {
-		const product = await Product.findById(req.params.id);
+		const review = await Review.findById(req.params.id);
 
 		res.status(200).json({
 			status: 'success',
 			data: {
-				product,
+				review,
 			},
 		});
 	} catch (error) {
@@ -56,9 +55,9 @@ exports.getProduct = async (req, res, next) => {
 	}
 };
 
-exports.updateProduct = async (req, res, next) => {
+exports.updateReview = async (req, res, next) => {
 	try {
-		const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+		const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
 			new: true,
 			runValidators: true,
 		});
@@ -66,7 +65,7 @@ exports.updateProduct = async (req, res, next) => {
 		res.status(200).json({
 			status: 'success',
 			data: {
-				product,
+				review,
 			},
 		});
 	} catch (error) {
@@ -77,9 +76,9 @@ exports.updateProduct = async (req, res, next) => {
 	}
 };
 
-exports.deleteProduct = async (req, res, next) => {
+exports.deleteReview = async (req, res, next) => {
 	try {
-		await Product.findByIdAndDelete(req.params.id);
+		await Review.findByIdAndDelete(req.params.id);
 
 		res.status(204).json({
 			status: 'success',
