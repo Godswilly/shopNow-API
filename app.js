@@ -1,6 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const productRouter = require('./routes/productRoutes');
+const orderRouter = require('./routes/orderRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 
 const app = express();
 
@@ -12,5 +14,7 @@ if (process.env.NODE_ENV === 'development') {
 
 //routes
 app.use('/api/v1/products', productRouter);
+app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 module.exports = app;
