@@ -52,11 +52,11 @@ const productSchema = new mongoose.Schema({
 		max: [5, 'Ratings must be below 5.0'],
 		set: (val) => Math.round(val * 10) / 10,
 	},
-	user: {
-		type: mongoose.Schema.ObjectId,
-		required: true,
-		ref: 'User',
-	},
+	// user: {
+	// 	type: mongoose.Schema.ObjectId,
+	// 	required: true,
+	// 	ref: 'User',
+	// },
 });
 
 const Product = mongoose.model('Product', productSchema);
