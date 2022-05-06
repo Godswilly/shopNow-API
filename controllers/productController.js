@@ -1,94 +1,60 @@
 const Product = require('../models/productModel');
+const asyncHandler = require('../utils/asyncHandler');
 
-exports.createProduct = async (req, res, next) => {
-	try {
-		const product = await Product.create(req.body);
+exports.createProduct = asyncHandler(async (req, res, next) => {
+	const product = await Product.create(req.body);
 
-		res.status(201).json({
-			status: 'success',
-			count: product.length,
-			data: {
-				product,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(201).json({
+		status: 'success',
+		count: product.length,
+		data: {
+			product,
+		},
+	});
+});
 
-exports.getAllProducts = async (req, res, next) => {
-	try {
-		const products = await Product.find({});
+exports.getAllProducts = asyncHandler(async (req, res, next) => {
+	const products = await Product.find({});
 
-		res.status(200).json({
-			status: 'success',
-			count: products.length,
-			data: {
-				products,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(200).json({
+		status: 'success',
+		count: products.length,
+		data: {
+			products,
+		},
+	});
+});
 
-exports.getProduct = async (req, res, next) => {
-	try {
-		const product = await Product.findById(req.params.id);
+exports.getProduct = asyncHandler(async (req, res, next) => {
+	const product = await Product.findById(req.params.id);
 
-		res.status(200).json({
-			status: 'success',
-			data: {
-				product,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(200).json({
+		status: 'success',
+		data: {
+			product,
+		},
+	});
+});
 
-exports.updateProduct = async (req, res, next) => {
-	try {
-		const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-			runValidators: true,
-		});
+exports.updateProduct = asyncHandler(async (req, res, next) => {
+	const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true,
+	});
 
-		res.status(200).json({
-			status: 'success',
-			data: {
-				product,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(200).json({
+		status: 'success',
+		data: {
+			product,
+		},
+	});
+});
 
-exports.deleteProduct = async (req, res, next) => {
-	try {
-		await Product.findByIdAndDelete(req.params.id);
+exports.deleteProduct = asyncHandler(async (req, res, next) => {
+	await Product.findByIdAndDelete(req.params.id);
 
-		res.status(204).json({
-			status: 'success',
-			data: null,
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(204).json({
+		status: 'success',
+		data: null,
+	});
+});

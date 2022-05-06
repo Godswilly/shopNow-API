@@ -1,93 +1,59 @@
 const Review = require('../models/reviewModel');
+const asyncHandler = require('../utils/asyncHandler');
 
-exports.createReview = async (req, res, next) => {
-	try {
-		const review = await create(req.body);
+exports.createReview = asyncHandler(async (req, res, next) => {
+	const review = await create(req.body);
 
-		res.status(201).json({
-			status: 'success',
-			data: {
-				review,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(201).json({
+		status: 'success',
+		data: {
+			review,
+		},
+	});
+});
 
-exports.getAllReviews = async (req, res, next) => {
-	try {
-		const reviews = await Review.find({});
+exports.getAllReviews = asyncHandler(async (req, res, next) => {
+	const reviews = await Review.find({});
 
-		res.status(200).json({
-			status: 'success',
-			count: reviews.length,
-			data: {
-				reviews,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(200).json({
+		status: 'success',
+		count: reviews.length,
+		data: {
+			reviews,
+		},
+	});
+});
 
-exports.getReview = async (req, res, next) => {
-	try {
-		const review = await Review.findById(req.params.id);
+exports.getReview = asyncHandler(async (req, res, next) => {
+	const review = await Review.findById(req.params.id);
 
-		res.status(200).json({
-			status: 'success',
-			data: {
-				review,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(200).json({
+		status: 'success',
+		data: {
+			review,
+		},
+	});
+});
 
-exports.updateReview = async (req, res, next) => {
-	try {
-		const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-			runValidators: true,
-		});
+exports.updateReview = asyncHandler(async (req, res, next) => {
+	const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+		new: true,
+		runValidators: true,
+	});
 
-		res.status(200).json({
-			status: 'success',
-			data: {
-				review,
-			},
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(200).json({
+		status: 'success',
+		data: {
+			review,
+		},
+	});
+});
 
-exports.deleteReview = async (req, res, next) => {
-	try {
-		await Review.findByIdAndDelete(req.params.id);
+exports.deleteReview = asyncHandler(async (req, res, next) => {
+	await Review.findByIdAndDelete(req.params.id);
 
-		res.status(204).json({
-			status: 'success',
-			data: null,
-		});
-	} catch (error) {
-		res.status(404).json({
-			status: 'fail',
-			message: error,
-		});
-	}
-};
+	res.status(204).json({
+		status: 'success',
+		data: null,
+	});
+});
