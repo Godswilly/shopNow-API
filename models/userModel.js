@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, 'Please enter your name'],
-		minlength: 3,
-		maxlength: 50,
+		minlength: [3, 'Name must have more or equal to 3 characters'],
+		maxlength: [20, 'Name must have less or equal to 20 characters'],
 	},
 	email: {
 		type: String,
@@ -28,16 +28,21 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'Please confirm your password'],
 		validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: 'Passwords are not the same!!',
-    },
+			validator: function (el) {
+				return el === this.password;
+			},
+			message: 'Passwords are not the same!!',
+		},
 	},
 	role: {
 		type: String,
 		enum: ['user', 'admin'],
 		default: 'user',
+	},
+	active: {
+		type: Boolean,
+		default: true,
+		select: false,
 	},
 	dateAdded: {
 		type: Date,
@@ -45,6 +50,24 @@ const userSchema = new mongoose.Schema({
 		select: false,
 	},
 });
+
+userSchema.pre('save', async function (next) {
+	if (!this.isModified('password')) return next();
+
+	const salt = await bcrypt.genSalt(12);
+	this.password = await bcrypt.hash(this.password, salt);
+
+	this.confirmPassword = undefined;
+	next();
+});
+
+userSchema.methods.comparePassword = async function (
+	candidatePassword,
+	userPassword
+) {
+	const isMatch = await bcrypt.compare(candidatePassword, userPassword);
+	return isMatch;
+};
 
 const User = mongoose.model('User', userSchema);
 
