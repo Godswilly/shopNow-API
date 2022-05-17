@@ -1,5 +1,7 @@
 const Review = require('../models/reviewModel');
 const asyncHandler = require('../utils/asyncHandler');
+const ErrorHandler = require('../utils/errorHandler');
+
 
 exports.createReview = asyncHandler(async (req, res, next) => {
 	const review = await create(req.body);
@@ -27,6 +29,10 @@ exports.getAllReviews = asyncHandler(async (req, res, next) => {
 exports.getReview = asyncHandler(async (req, res, next) => {
 	const review = await Review.findById(req.params.id);
 
+	if (!review) {
+		throw new ErrorHandler('No review found with the given ID', 404);
+	}
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -41,6 +47,10 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
 		runValidators: true,
 	});
 
+	if (!review) {
+		throw new ErrorHandler('No review found with the given ID', 404);
+	}
+
 	res.status(200).json({
 		status: 'success',
 		data: {
@@ -50,7 +60,11 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
 });
 
 exports.deleteReview = asyncHandler(async (req, res, next) => {
-	await Review.findByIdAndDelete(req.params.id);
+	const review = await Review.findByIdAndDelete(req.params.id);
+
+	if (!review) {
+		throw new ErrorHandler('No review found with the given ID', 404);
+	}
 
 	res.status(204).json({
 		status: 'success',

@@ -1,6 +1,6 @@
 const User = require('../models/userModel');
 const asyncHandler = require('../utils/asyncHandler');
-const AppError = require('../utils/appError');
+const ErrorHandler = require('../utils/errorHandler');
 
 
 exports.signup = asyncHandler(async (req, res, next) => {
