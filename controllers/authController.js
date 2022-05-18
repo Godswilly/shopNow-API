@@ -10,7 +10,7 @@ const signToken = (id) => {
 	});
 };
 
-exports.signup = asyncHandler(async (req, res, next) => {
+exports.signup = asyncHandler(async (req, res) => {
 	const newUser = await User.create({
 		name: req.body.name,
 		email: req.body.email,
@@ -27,5 +27,26 @@ exports.signup = asyncHandler(async (req, res, next) => {
 		data: {
 			user: newUser,
 		},
+	});
+});
+
+exports.login = asyncHandler(async (req, res) => {
+	const { email, password } = req.body;
+
+	if (!email || !password) {
+		throw new ErrorHandler('Please enter your email and password', 400);
+	}
+
+	const user = await user.findOne({ email }).select('+password');
+
+	if (!user || !(await user.comparePassword(password, user.password))) {
+		throw new ErrorHandler('Incorrect email or password', 401);
+	}
+
+	const token = signToken(user.id);
+
+	res.status(200).json({
+		status: 'success',
+		token,
 	});
 });
