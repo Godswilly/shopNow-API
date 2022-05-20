@@ -2,19 +2,7 @@ const User = require('../models/userModel');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorHandler = require('../utils/errorHandler');
 
-exports.createUser = asyncHandler(async (req, res, next) => {
-	const user = await User.create(req.body);
-
-	res.status(201).json({
-		status: 'success',
-		count: user.length,
-		data: {
-			user,
-		},
-	});
-});
-
-exports.getAllUsers = asyncHandler(async (req, res, next) => {
+const getAllUsers = asyncHandler(async (req, res, next) => {
 	const users = await User.find({});
 
 	res.status(200).json({
@@ -26,7 +14,7 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getUser = asyncHandler(async (req, res, next) => {
+const getUser = asyncHandler(async (req, res, next) => {
 	const user = await User.findById(req.params.id);
 
 	if (!user) {
@@ -41,7 +29,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.updateUser = asyncHandler(async (req, res, next) => {
+const updateUser = asyncHandler(async (req, res, next) => {
 	const user = await User.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true,
@@ -59,7 +47,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.deleteUser = asyncHandler(async (req, res, next) => {
+const deleteUser = asyncHandler(async (req, res, next) => {
 	const user = await User.findByIdAndDelete(req.params.id);
 
 	if (!user) {
@@ -71,3 +59,10 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
 		data: null,
 	});
 });
+
+module.exports = {
+	getAllUsers,
+	getUser,
+	updateUser,
+	deleteUser,
+};

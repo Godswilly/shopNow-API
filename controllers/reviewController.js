@@ -2,8 +2,7 @@ const Review = require('../models/reviewModel');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorHandler = require('../utils/errorHandler');
 
-
-exports.createReview = asyncHandler(async (req, res, next) => {
+const createReview = asyncHandler(async (req, res, next) => {
 	const review = await create(req.body);
 
 	res.status(201).json({
@@ -14,7 +13,7 @@ exports.createReview = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getAllReviews = asyncHandler(async (req, res, next) => {
+const getAllReviews = asyncHandler(async (req, res, next) => {
 	const reviews = await Review.find({});
 
 	res.status(200).json({
@@ -26,7 +25,7 @@ exports.getAllReviews = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getReview = asyncHandler(async (req, res, next) => {
+const getReview = asyncHandler(async (req, res, next) => {
 	const review = await Review.findById(req.params.id);
 
 	if (!review) {
@@ -41,7 +40,7 @@ exports.getReview = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.updateReview = asyncHandler(async (req, res, next) => {
+const updateReview = asyncHandler(async (req, res, next) => {
 	const review = await Review.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true,
@@ -59,7 +58,7 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.deleteReview = asyncHandler(async (req, res, next) => {
+const deleteReview = asyncHandler(async (req, res, next) => {
 	const review = await Review.findByIdAndDelete(req.params.id);
 
 	if (!review) {
@@ -71,3 +70,11 @@ exports.deleteReview = asyncHandler(async (req, res, next) => {
 		data: null,
 	});
 });
+
+module.exports = {
+	createReview,
+	getAllReviews,
+	getReview,
+	updateReview,
+	deleteReview,
+};

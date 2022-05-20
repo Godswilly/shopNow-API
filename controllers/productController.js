@@ -2,7 +2,7 @@ const Product = require('../models/productModel');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorHandler = require('../utils/errorHandler');
 
-exports.createProduct = asyncHandler(async (req, res, next) => {
+const createProduct = asyncHandler(async (req, res, next) => {
 	const product = await Product.create(req.body);
 
 	res.status(201).json({
@@ -14,7 +14,7 @@ exports.createProduct = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getAllProducts = asyncHandler(async (req, res, next) => {
+const getAllProducts = asyncHandler(async (req, res, next) => {
 	const products = await Product.find({});
 
 	res.status(200).json({
@@ -26,7 +26,7 @@ exports.getAllProducts = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getProduct = asyncHandler(async (req, res, next) => {
+const getProduct = asyncHandler(async (req, res, next) => {
 	const product = await Product.findById(req.params.id);
 
 	if (!product) {
@@ -41,7 +41,7 @@ exports.getProduct = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.updateProduct = asyncHandler(async (req, res, next) => {
+const updateProduct = asyncHandler(async (req, res, next) => {
 	const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true,
@@ -59,7 +59,7 @@ exports.updateProduct = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.deleteProduct = asyncHandler(async (req, res, next) => {
+const deleteProduct = asyncHandler(async (req, res, next) => {
 	const product = await Product.findByIdAndDelete(req.params.id);
 
 	if (!product) {
@@ -71,3 +71,11 @@ exports.deleteProduct = asyncHandler(async (req, res, next) => {
 		data: null,
 	});
 });
+
+module.exports = {
+	createProduct,
+	getAllProducts,
+	getProduct,
+	updateProduct,
+	deleteProduct,
+};

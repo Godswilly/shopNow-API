@@ -2,7 +2,7 @@ const Order = require('../models/orderModel');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorHandler = require('../utils/errorHandler');
 
-exports.createOrder = asyncHandler(async (req, res, next) => {
+const createOrder = asyncHandler(async (req, res, next) => {
 	const order = await Order.create(req.body);
 
 	res.status(201).json({
@@ -14,7 +14,7 @@ exports.createOrder = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getAllOrder = asyncHandler(async (req, res, next) => {
+const getAllOrder = asyncHandler(async (req, res, next) => {
 	const order = await Order.find({});
 
 	res.status(200).json({
@@ -26,7 +26,7 @@ exports.getAllOrder = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.getOrder = asyncHandler(async (req, res, next) => {
+const getOrder = asyncHandler(async (req, res, next) => {
 	const order = await Order.findById(req.params.id);
 
 	if (!order) {
@@ -41,7 +41,7 @@ exports.getOrder = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.updateOrder = asyncHandler(async (req, res, next) => {
+const updateOrder = asyncHandler(async (req, res, next) => {
 	const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
 		new: true,
 		runValidators: true,
@@ -60,7 +60,7 @@ exports.updateOrder = asyncHandler(async (req, res, next) => {
 	});
 });
 
-exports.deleteOrder = asyncHandler(async (req, res, next) => {
+const deleteOrder = asyncHandler(async (req, res, next) => {
 	const order = await Order.findByIdAndDelete(req.params.id);
 
 	if (!order) {
@@ -72,3 +72,11 @@ exports.deleteOrder = asyncHandler(async (req, res, next) => {
 		data: null,
 	});
 });
+
+module.exports = {
+	createOrder,
+	getAllOrder,
+	getOrder,
+	updateOrder,
+	deleteOrder,
+};

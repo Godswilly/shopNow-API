@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const asyncHandler = require('../utils/asyncHandler');
 const ErrorHandler = require('../utils/errorHandler');
-const req = require('express/lib/request');
 
 const signToken = (id) => {
 	return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -11,7 +10,7 @@ const signToken = (id) => {
 	});
 };
 
-exports.signup = asyncHandler(async (req, res) => {
+const signup = asyncHandler(async (req, res) => {
 	const newUser = await User.create({
 		name: req.body.name,
 		email: req.body.email,
@@ -37,7 +36,7 @@ exports.signup = asyncHandler(async (req, res) => {
 	});
 });
 
-exports.login = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
 
 	if (!email || !password) {
@@ -58,7 +57,7 @@ exports.login = asyncHandler(async (req, res) => {
 	});
 });
 
-exports.protectRoutes = asyncHandler(async (req, res, next) => {
+const protectRoutes = asyncHandler(async (req, res, next) => {
 	let token;
 
 	if (
@@ -98,7 +97,7 @@ exports.protectRoutes = asyncHandler(async (req, res, next) => {
 	next();
 });
 
-exports.roleAccess =
+const roleAccess =
 	(...roles) =>
 	(req, res, next) => {
 		if (!roles.includes(req.user.role)) {
@@ -109,3 +108,5 @@ exports.roleAccess =
 		}
 		next();
 	};
+
+module.exports = { signup, login, protectRoutes, roleAccess };
