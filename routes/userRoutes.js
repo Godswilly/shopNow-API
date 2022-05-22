@@ -1,6 +1,5 @@
 const express = require('express');
 const { signup, login } = require('../controllers/authController');
-
 const {
 	getAllUsers,
 	getUser,

@@ -11,19 +11,20 @@ const signToken = (id) => {
 };
 
 const signup = asyncHandler(async (req, res) => {
-	const newUser = await User.create({
-		name: req.body.name,
-		email: req.body.email,
-		password: req.body.password,
-		passwordConfirm: req.body.passwordConfirm,
-		role: req.body.role,
-		passwordChangedAt: req.body.passwordChangedAt,
-	});
+	const { email } = req.body;
 
 	const emailAlreadyExists = await User.findOne({ email });
 	if (emailAlreadyExists) {
 		throw new ErrorHandler('Email already exists');
 	}
+
+	const newUser = await User.create({
+		username: req.body.username,
+		email: req.body.email,
+		password: req.body.password,
+		confirmPassword: req.body.confirmPassword,
+		passwordChangedAt: req.body.passwordChangedAt,
+	});
 
 	const token = signToken(newUser._id);
 
@@ -43,14 +44,13 @@ const login = asyncHandler(async (req, res) => {
 		throw new ErrorHandler('Please enter your email and password', 400);
 	}
 
-	const user = await user.findOne({ email }).select('+password');
+	const user = await User.findOne({ email }).select('+password');
 
 	if (!user || !(await user.comparePassword(password, user.password))) {
 		throw new ErrorHandler('Incorrect email or password', 401);
 	}
 
-	const token = signToken(user.id);
-
+	const token = signToken(user._id);
 	res.status(200).json({
 		status: 'success',
 		token,
@@ -64,12 +64,12 @@ const protectRoutes = asyncHandler(async (req, res, next) => {
 		req.headers.authorization &&
 		req.headers.authorization.startsWith('Bearer')
 	) {
-		token = req.headers.authorization.split('')[1];
+		token = req.headers.authorization.split(' ')[1];
 	}
 
 	if (!token) {
 		throw new ErrorHandler(
-			'You are not logged in. Please log in to get access',
+			'You are not logged in! Please log in to get access.',
 			401
 		);
 	}
