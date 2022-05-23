@@ -1,4 +1,5 @@
 const express = require('express');
+const { protectRoutes } = require('../controllers/authController');
 const {
 	createReview,
 	getAllReviews,
@@ -9,8 +10,12 @@ const {
 
 const router = express.Router();
 
-router.route('/').get(getAllReviews).post(createReview);
+router.route('/').get(getAllReviews).post(protectRoutes, createReview);
 
-router.route('/:id').get(getReview).patch(updateReview).delete(deleteReview);
+router
+	.route('/:id')
+	.get(getReview)
+	.patch(protectRoutes, updateReview)
+	.delete(protectRoutes, deleteReview);
 
 module.exports = router;

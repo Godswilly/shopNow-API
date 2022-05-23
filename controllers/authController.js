@@ -24,6 +24,7 @@ const signup = asyncHandler(async (req, res) => {
 		password: req.body.password,
 		confirmPassword: req.body.confirmPassword,
 		passwordChangedAt: req.body.passwordChangedAt,
+		role: req.body.role,
 	});
 
 	const token = signToken(newUser._id);

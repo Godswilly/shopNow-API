@@ -1,4 +1,5 @@
 const express = require('express');
+const { protectRoutes, roleAccess } = require('../controllers/authController');
 const {
 	createOrder,
 	getAllOrder,
@@ -9,8 +10,15 @@ const {
 
 const router = express.Router();
 
-router.route('/').get(getAllOrder).post(createOrder);
+router
+	.route('/')
+	.get(protectRoutes, roleAccess('admin'), getAllOrder)
+	.post(protectRoutes, createOrder);
 
-router.route('/:id').get(getOrder).patch(updateOrder).delete(deleteOrder);
+router
+	.route('/:id')
+	.get(protectRoutes, getOrder)
+	.patch(protectRoutes, updateOrder)
+	.delete(protectRoutes, deleteOrder);
 
 module.exports = router;
