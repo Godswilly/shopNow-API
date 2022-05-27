@@ -6,6 +6,7 @@ const {
 	roleAccess,
 	forgotPassword,
 	resetPassword,
+	updatePassword,
 } = require('../controllers/authController');
 const {
 	getAllUsers,
@@ -20,6 +21,8 @@ router.post('/signup', signup);
 router.post('/login', login);
 router.post('/forgotPassword', forgotPassword);
 router.post('/resetPassword/:token', resetPassword);
+
+router.patch('/updateMyPassword', protectRoutes, updatePassword);
 
 router.route('/').get(protectRoutes, roleAccess('admin'), getAllUsers);
 

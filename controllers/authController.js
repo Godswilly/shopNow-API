@@ -11,6 +11,21 @@ const signToken = (id) => {
 	});
 };
 
+const createSendToken = (user, statusCode, res) => {
+	const token = signToken(user._id);
+
+	// Remove password fro the output
+	user.password = undefined;
+
+	res.status(statusCode).json({
+		status: 'success',
+		token,
+		data: {
+			user,
+		},
+	});
+};
+
 const signup = asyncHandler(async (req, res) => {
 	const { email } = req.body;
 
@@ -27,16 +42,7 @@ const signup = asyncHandler(async (req, res) => {
 		passwordChangedAt: req.body.passwordChangedAt,
 		role: req.body.role,
 	});
-
-	const token = signToken(newUser._id);
-
-	res.status(201).json({
-		status: 'success',
-		token,
-		data: {
-			user: newUser,
-		},
-	});
+	createSendToken(newUser, 201, res);
 });
 
 const login = asyncHandler(async (req, res) => {
@@ -52,12 +58,7 @@ const login = asyncHandler(async (req, res) => {
 		throw new ErrorHandler('Incorrect email or password', 401);
 	}
 
-	const token = signToken(user._id);
-
-	res.status(200).json({
-		status: 'success',
-		token,
-	});
+	createSendToken(user, 200, res);
 });
 
 const protectRoutes = asyncHandler(async (req, res, next) => {
@@ -170,6 +171,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 	});
 
 	// 2) If token has not expired, and there is user, set the new password
+
 	if (!user) {
 		throw new ErrorHandler('Token is invalid or has expired', 400);
 	}
@@ -183,12 +185,29 @@ const resetPassword = asyncHandler(async (req, res) => {
 	// 3) Update changedPasswordAt property for the user
 
 	// 4) log the user in, and send JWT
-	const token = signToken(user._id);
 
-	res.status(200).json({
-		status: 'success',
-		token,
-	});
+	createSendToken(user, 200, res);
+});
+
+const updatePassword = asyncHandler(async (req, res) => {
+	// 1) Get user from collection
+
+	const user = await User.findById(req.user.id).select('+password');
+
+	// 2) Check if posted current password is correct
+
+	if (!(await user.comparePassword(req.body.passwordCurrent, user.password))) {
+		throw new ErrorHandler('Your current password is wrong.', 401);
+	}
+	// 3) If so, update password
+
+	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
+	await user.save();
+
+	// 4) Log user in, send JWT
+
+	createSendToken(user, 200, res);
 });
 
 module.exports = {
@@ -198,4 +217,5 @@ module.exports = {
 	roleAccess,
 	forgotPassword,
 	resetPassword,
+	updatePassword,
 };
