@@ -53,6 +53,7 @@ const login = asyncHandler(async (req, res) => {
 	}
 
 	const token = signToken(user._id);
+
 	res.status(200).json({
 		status: 'success',
 		token,
@@ -155,7 +156,40 @@ const forgotPassword = asyncHandler(async (req, res) => {
 	}
 });
 
-const resetPassword = asyncHandler(async (req, res) => {});
+const resetPassword = asyncHandler(async (req, res) => {
+	// 1) Get user based on the token
+
+	const hashedToken = crypto
+		.createHash('sha256')
+		.update(req.params.token)
+		.digest('hex');
+
+	const user = await User.findOne({
+		passwordResetToken: hashedToken,
+		passwordResetExpires: { $gt: Date.now() },
+	});
+
+	// 2) If token has not expired, and there is user, set the new password
+	if (!user) {
+		throw new ErrorHandler('Token is invalid or has expired', 400);
+	}
+
+	user.password = req.body.password;
+	user.passwordConfirm = req.body.passwordConfirm;
+	user.passwordResetToken = undefined;
+	user.passwordResetExpires = undefined;
+	await user.save();
+
+	// 3) Update changedPasswordAt property for the user
+
+	// 4) log the user in, and send JWT
+	const token = signToken(user._id);
+
+	res.status(200).json({
+		status: 'success',
+		token,
+	});
+});
 
 module.exports = {
 	signup,
