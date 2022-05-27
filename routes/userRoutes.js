@@ -4,6 +4,8 @@ const {
 	login,
 	protectRoutes,
 	roleAccess,
+	forgotPassword,
+	resetPassword,
 } = require('../controllers/authController');
 const {
 	getAllUsers,
@@ -16,6 +18,8 @@ const router = express.Router();
 
 router.post('/signup', signup);
 router.post('/login', login);
+router.post('/forgotPassword', forgotPassword);
+router.post('/resetPassword', resetPassword);
 
 router.route('/').get(protectRoutes, roleAccess('admin'), getAllUsers);
 
