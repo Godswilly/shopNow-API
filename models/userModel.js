@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
@@ -65,9 +64,15 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+	if (!this.isModified('password') || this.isNew) return next();
 
-  this.passwordChangedAt = Date.now() - 1000;
+	this.passwordChangedAt = Date.now() - 1000;
+});
+
+userSchema.pre(/^find/, async function (next) {
+	// This points to the current query
+	this.find({ active: { $ne: false } });
+	next();
 });
 
 userSchema.methods.comparePassword = async function (

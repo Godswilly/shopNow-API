@@ -96,10 +96,20 @@ const deleteUser = asyncHandler(async (req, res) => {
 	});
 });
 
+const deleteMe = asyncHandler(async (req, res) => {
+	await User.findByIdAndUpdate(req.user.id, { active: false });
+
+	res.status(204).json({
+		status: 'success',
+		data: null,
+	});
+});
+
 module.exports = {
 	getAllUsers,
 	getUser,
 	updateUser,
 	deleteUser,
 	updateMe,
+	deleteMe,
 };
